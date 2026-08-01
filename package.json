@@ -1,0 +1,11 @@
+{
+  "name": "docker-cicd-app",
+  "version": "1.0.0",
+  "description": "Production Node.js App in GitHub Org",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node test/app.test.js"
+  },
+  "dependencies": {}
+}
