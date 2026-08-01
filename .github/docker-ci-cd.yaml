@@ -1,0 +1,49 @@
+name: Enterprise Docker CI/CD Pipeline
+
+on:
+  push:
+    branch: [main]
+
+  pull_request:
+    branch: [main]
+
+jobs:
+  test:
+    name: Unit test and Health Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Node Setup
+        uses: actions/setup-node@v4
+        with:
+          version: '18'
+
+      - name: Run Tests
+        run: node ".\test\app.test.js"
+
+  build-and-push-docker:
+    name: Build & Push Docker Image
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: log in to Docker
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: Build & Push Docker Image
+        uses: docker/build-and-push-actions@v5
+        with:
+          context: .
+          push: ${{github.ref == 'refs/head/main'}}
+          tags: |
+            ${{secrets.DOCKERHUB_USERNAME}}/docker-cicd-app:latest}}
+            ${{secrets.DOCKERHUB_USERNAME}}/docker-cicd-app:${{github.sha}}
