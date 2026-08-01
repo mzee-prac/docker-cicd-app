@@ -2,10 +2,10 @@ name: Enterprise Docker CI/CD Pipeline
 
 on:
   push:
-    branch: [main]
+    branches: [main]
 
   pull_request:
-    branch: [main]
+    branches: [main]
 
 jobs:
   test:
@@ -19,10 +19,10 @@ jobs:
       - name: Node Setup
         uses: actions/setup-node@v4
         with:
-          version: '18'
+          node-version: '18'
 
       - name: Run Tests
-        run: node ".\test\app.test.js"
+        run: node "test/app.test.js"
 
   build-and-push-docker:
     name: Build & Push Docker Image
@@ -40,10 +40,10 @@ jobs:
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
       - name: Build & Push Docker Image
-        uses: docker/build-and-push-actions@v5
+        uses: docker/build-push-actions@v5
         with:
           context: .
-          push: ${{github.ref == 'refs/head/main'}}
+          push: ${{github.ref == 'refs/heads/main'}}
           tags: |
             ${{secrets.DOCKERHUB_USERNAME}}/docker-cicd-app:latest}}
             ${{secrets.DOCKERHUB_USERNAME}}/docker-cicd-app:${{github.sha}}
