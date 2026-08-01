@@ -1,0 +1,2 @@
+# Everything in repo is owned by devops-team
+*       @mzee-prac/DevOps-team
